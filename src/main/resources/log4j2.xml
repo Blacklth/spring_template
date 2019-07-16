@@ -9,7 +9,7 @@
 <configuration status="INFO" monitorInterval="30">
 <!-- 自己设置属性，后面通过${}来访问 -->
 <properties>
-        <property name="LOG_HOME">/logs</property>
+        <property name="LOG_HOME">logs</property>
 </properties>
 <appenders>
     <!--Appender 1. 输出到Console控制台，指定输出格式和过滤器等级为INFO -->

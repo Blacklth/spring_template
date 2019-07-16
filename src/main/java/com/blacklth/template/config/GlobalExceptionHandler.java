@@ -40,32 +40,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResultBean<Boolean> runtimeExceptionHandler(HttpServletRequest request, final Exception e, HttpServletResponse response){
         RuntimeException exception = (RuntimeException)e;
-        return new ResultBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),exception.getMessage(),false);
+        e.printStackTrace();
+        return new ResultBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),exception);
     }
-    
-    /**
-     *  通用的接口映射异常处理方
-     * @author     ：LiaoTianHong
-     * @date       ：Created in 2019/7/15 15:07
-     * @param       ex
-     * @param       body
-     * @param       headers
-     * @param       status
-     * @param       request
-     * @return     : org.springframework.http.ResponseEntity<java.lang.Object>
-     */
-    @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        if (ex instanceof MethodArgumentNotValidException) {
-            MethodArgumentNotValidException exception = (MethodArgumentNotValidException) ex;
-            return new ResponseEntity<>(new ResultBean<>(status.value(), exception.getBindingResult().getAllErrors().get(0).getDefaultMessage(),false), status);
-        }
-        if (ex instanceof MethodArgumentTypeMismatchException) {
-            MethodArgumentTypeMismatchException exception = (MethodArgumentTypeMismatchException) ex;
-            logger.error("参数转换失败，方法：" + exception.getParameter().getMethod().getName() + "，参数：" + exception.getName()
-                    + ",信息：" + exception.getLocalizedMessage());
-            return new ResponseEntity<>(new ResultBean<>(status.value(), "参数转换失败",false), status);
-        }
-        return new ResponseEntity<>(new ResultBean<>(status.value(), "参数转换失败",false), status);
-    }
+
+
 }

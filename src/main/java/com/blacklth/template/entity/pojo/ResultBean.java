@@ -7,7 +7,6 @@ import java.io.Serializable;
  * @date : 2019/7/15 14:54
  * @description:
  */
-
 public class ResultBean<T> implements Serializable {
     private static final long serialVersionUID = -6248238306422472597L;
     /**
@@ -18,21 +17,16 @@ public class ResultBean<T> implements Serializable {
      * 表示接口调用失败
      */
     public static final int FAIL = 1;
-    /**
-     * 表示没有权限调用该接口
-     */
-    public static final int NO_PERMISSION = 2;
 
-    public static final String NO_PERMISSION_MSG = "没有权限";
     public static final String SUCC_MSG = "成功";
     public static final String FAIL_MSG = "失败";
 
-    private int code = SUCCESS;
+    private int code = 200;
+
+    private int state = SUCCESS;
 
     private String msg = SUCC_MSG;
-    /**
-     * 返回的数据
-     */
+
     private T data;
 
     public ResultBean() {
@@ -44,26 +38,24 @@ public class ResultBean<T> implements Serializable {
         this.data = data;
     }
 
-    /**
-     * 包装异常信息
-     *
-     * @param e
-     */
-    public ResultBean(Throwable e) {
-        super();
-        this.msg = e.getMessage();
-        this.code = FAIL;
-    }
-
-    public ResultBean(String msg) {
-        super();
-        this.msg = msg;
-        this.code = FAIL;
-    }
-
-    public ResultBean(int code,String msg, T data){
+    public ResultBean(int code, Throwable e) {
         super();
         this.code = code;
+        this.state = FAIL;
+        this.msg = e.getMessage();
+    }
+
+    public ResultBean(int code, String msg) {
+        super();
+        this.code = code;
+        this.state = FAIL;
+        this.msg = msg;
+    }
+
+    public ResultBean(int code, int state, String msg,T data) {
+        super();
+        this.code = code;
+        this.state = FAIL;
         this.msg = msg;
         this.data = data;
     }
@@ -76,12 +68,12 @@ public class ResultBean<T> implements Serializable {
         this.msg = msg;
     }
 
-    public int getCode() {
-        return code;
+    public int getState() {
+        return state;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setState(int state) {
+        this.state = state;
     }
 
     public T getData() {
@@ -90,5 +82,15 @@ public class ResultBean<T> implements Serializable {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "code=" + code +
+                ", state=" + state +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
     }
 }
