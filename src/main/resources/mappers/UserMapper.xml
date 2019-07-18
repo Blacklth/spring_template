@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blacklth.template.mapper.UserMapper">
+    <sql id="BASE_TABLE">
+    user
+  </sql>
+    <sql id="BASE_COLUMN">
+    user_id,user_name,password,phone
+  </sql>
+
+    <select id="selectUser" resultType="com.blacklth.template.entity.User">
+        select
+        <include refid="BASE_COLUMN"/>
+        from <include refid="BASE_TABLE"></include>
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insert" parameterType="com.blacklth.template.entity.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO
+        <include refid="BASE_TABLE"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user_name,password,
+            <if test="phone != null">
+                phone,
+            </if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            #{userName, jdbcType=VARCHAR},#{password, jdbcType=VARCHAR},
+            <if test="phone != null">
+                #{phone, jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectUsers" resultType="com.blacklth.template.entity.User">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+    </select>
+</mapper>
