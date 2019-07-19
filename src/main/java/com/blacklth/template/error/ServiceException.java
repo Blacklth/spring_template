@@ -3,7 +3,7 @@ package com.blacklth.template.error;
 /**
  * @author : LiaoTianHong
  * @date : 2019/7/19 16:34
- * @description:
+ * @description:业务异常
  */
 public class ServiceException extends RuntimeException{
 

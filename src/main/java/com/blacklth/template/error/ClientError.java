@@ -2,40 +2,59 @@ package com.blacklth.template.error;
 
 import org.springframework.http.HttpStatus;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ResourceBundle;
+
 /**
  * @author : LiaoTianHong
- * @date : 2019/7/19 20:12
- * @description:
+ * @date : 2019/7/19 20:02
+ * @description:用来匹配异常的错误码和错误信息
  */
-public enum ClientError  {
+public class ClientError {
 
-    MissingServletRequestParameter(HttpStatus.BAD_REQUEST,"缺少请求参数"),
-    MessageNotReadable(HttpStatus.BAD_REQUEST,"参数解析失败"),
-    MethodArgumentNotValid(HttpStatus.BAD_REQUEST,"参数验证失败"),
-    NotFound(HttpStatus.NOT_FOUND,"未找到资源"),
-    MethodNotSupported(HttpStatus.METHOD_NOT_ALLOWED,"不支持当前请求方法"),
-    MediaTypeNotSupported(HttpStatus.UNSUPPORTED_MEDIA_TYPE,"不支持当前媒体类型");
-
-    private String msg;
     private String code;
+    private String msg;
 
-    private ClientError(HttpStatus httpStatus,String msg){
-        this.code = httpStatus.toString();
-        this.msg = msg;
-    }
-    public String getMsg() {
-        return msg;
+    /**
+     * 通过异常类名构建错误码和错误信息
+     * 如果属性文件中不存在后面的msg信息，则填充为exception自带的message
+     * @param e
+     */
+    ClientError(Exception e){
+        String key = e.getClass().getSimpleName();
+        ResourceBundle rb = ResourceBundle.getBundle("i18n");
+        String errorMessage = rb.getString(key);
+        String []  str = errorMessage.split(",");
+        this.code = str[0];
+        this.msg = e.getMessage();
+        if(str[1] != null){
+            this.msg = str[1];
+        }
+        System.out.println(msg);
+
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    /**
+     *  判断异常类名是否在配置文件中
+     * @author     ：TianHong Liao
+     * @date       ：Created in 2019/7/19 22:36
+     * @param       e
+     * @return     : java.lang.Boolean
+     */
+    static public Boolean isClientError(Exception e){
+        String key = e.getClass().getSimpleName();
+        ResourceBundle rb = ResourceBundle.getBundle("i18n");
+        if(rb.containsKey(key)){
+            return true;
+        }
+        return false;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public String getMsg() {
+        return msg;
     }
 }

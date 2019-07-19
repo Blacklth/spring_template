@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * @author : LiaoTianHong
  * @date : 2019/7/18 11:52
- * @description:
+ * @description:用户类
  */
 @Data
 public class User {

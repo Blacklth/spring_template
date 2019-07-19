@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author : LiaoTianHong
  * @date : 2019/7/15 14:54
- * @description:
+ * @description:统一返回结果类
  */
 public class ResultBean<T> implements Serializable {
 

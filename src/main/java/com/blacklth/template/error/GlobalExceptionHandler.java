@@ -1,24 +1,13 @@
-package com.blacklth.template.config;
+package com.blacklth.template.error;
 
 import com.blacklth.template.entity.pojo.ResultBean;
-import com.blacklth.template.error.ErrorCode;
-import com.blacklth.template.error.ServiceException;
 import com.blacklth.template.utils.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author : LiaoTianHong
@@ -32,7 +21,7 @@ public class GlobalExceptionHandler {
 
 
     /**
-     *
+     * 处理业务异常
      * @author     ：LiaoTianHong
      * @date       ：Created in 2019/7/19 19:24
      * @param       request
@@ -44,19 +33,32 @@ public class GlobalExceptionHandler {
     public ResultBean<Object> serviceExceptionHandler(HttpServletRequest request, Exception e){
         ServiceException exception = (ServiceException) e;
         e.printStackTrace();
+        //TODO 包装异常堆栈信息输出到控制台
+        //logger.error();
         return ResultUtil.makeFail(exception.getCode(),exception.getMsg());
 
     }
 
+    /**
+     *  处理http异常和系统异常
+     * @author     ：TianHong Liao
+     * @date       ：Created in 2019/7/19 22:37
+     * @param       request
+     * @param       e
+     * @return     : com.blacklth.template.entity.pojo.ResultBean<java.lang.Object>
+     */
     @ExceptionHandler(Exception.class)
     public ResultBean<Object> systemeExceptionHandler(HttpServletRequest request,Exception e){
 
-        if(e instanceof org.springframework.web.servlet.NoHandlerFoundException){
-            logger.error("未找到资源");
-            return ResultUtil.makeFail(HttpStatus.NOT_FOUND.toString(),"未找到相应资源");
+        if(ClientError.isClientError(e)){
+            ClientError clientError = new ClientError(e);
+            logger.error(e.getMessage());
+            return ResultUtil.makeFail(clientError.getCode(),clientError.getMsg());
         }
         RuntimeException exception = (RuntimeException) e;
         e.printStackTrace();
+        //TODO 包装异常堆栈信息输出到控制台
+        //logger.error();
         return ResultUtil.makeFail(exception.getClass().getSimpleName(),exception.getMessage());
     }
 
