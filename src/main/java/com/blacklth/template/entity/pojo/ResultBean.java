@@ -8,56 +8,32 @@ import java.io.Serializable;
  * @description:
  */
 public class ResultBean<T> implements Serializable {
+
     private static final long serialVersionUID = -6248238306422472597L;
-    /**
-     * 表示接口调用成功
-     */
-    public static final int SUCCESS = 0;
-    /**
-     * 表示接口调用失败
-     */
-    public static final int FAIL = 1;
 
-    public static final String SUCC_MSG = "成功";
-    public static final String FAIL_MSG = "失败";
+    private String code;
 
-    private int code = 200;
+    private int state ;
 
-    private int state = SUCCESS;
+    private String msg ;
 
-    private String msg = SUCC_MSG;
+    private T data ;
 
-    private T data;
 
-    public ResultBean() {
-        super();
-    }
-
-    public ResultBean(T data) {
-        super();
-        this.data = data;
-    }
-
-    public ResultBean(int code, Throwable e) {
-        super();
+    public ResultBean(String code, int state, String msg, T data){
         this.code = code;
-        this.state = FAIL;
-        this.msg = e.getMessage();
-    }
-
-    public ResultBean(int code, String msg) {
-        super();
-        this.code = code;
-        this.state = FAIL;
-        this.msg = msg;
-    }
-
-    public ResultBean(int code, int state, String msg,T data) {
-        super();
-        this.code = code;
-        this.state = FAIL;
+        this.state = state;
         this.msg = msg;
         this.data = data;
+    }
+
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getCode(){
+        return code;
     }
 
     public String getMsg() {
@@ -93,4 +69,6 @@ public class ResultBean<T> implements Serializable {
                 ", data=" + data +
                 '}';
     }
+
+
 }
